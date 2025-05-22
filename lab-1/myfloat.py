@@ -47,6 +47,27 @@ class MyFloat:
         """
         result = ""
         # complete the method from here:
+        """
+        we have two strings, assuming of same length
+
+        get the exponents first. 
+        """
+        e_x_str = x[1:self.e+1]
+        e_y_str = y[1:self.e+1]
+        # x_str = x[self.e+1:]
+        # y_str = y[self.e+1:]
+        ex=0
+        for i, x in enumerate(e_x_str[::-1]):
+            ex = ex + int(x)*2**(i)
+            print(ex)
+
+        ey=0
+        for i, x in enumerate(e_y_str[::-1]):
+            ey = ey + int(x)*2**(i)
+            print(ey)
+
+        exp_off = abs(ex-ey)
+        print("Offset bw exponents:\t",exp_off)
 
         return result
 
