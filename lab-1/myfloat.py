@@ -52,6 +52,9 @@ class MyFloat:
         sign_x, man_x, e_x_str = x[0], "1"+x[self.e+1:], x[1:self.e+1][::-1]
         sign_y, man_y, e_y_str = y[0], "1"+y[self.e+1:], y[1:self.e+1][::-1]
 
+        result_man = ""
+        result_exp = ""
+        result_sign = ""
         #assuming lenX equal lenY, we convert both exponents to Dec
         exp_x, exp_y = 0, 0
         for i in range(0, len(e_x_str)):
@@ -77,16 +80,39 @@ class MyFloat:
         # compare the binstrings' signs to decide whether to add them or subtract
         if int(sign_x) ^ int(sign_y):
             print("Lets do subtraction")
+            # lets first check for the bigger mantissa
+
+            bigger_number_is_x = -1
+
+            for i in range( len(man_y)-1, -1, -1):
+                if man_y[i]==man_x[i]:
+                    continue
+                if man_y[i]>man_x[i]:
+                    bigger_number_is_x = False
+                    break
+                if man_y[i]<man_x[i]:
+                    bigger_number_is_x = True
+                    break
+
+            if bigger_number_is_x==-1:
+                man_a = man_x
+                man_b = man_y
+            elif bigger_number_is_x:
+                man_a = man_x
+                man_b = man_y
+            else:
+                man_a = man_y
+                man_b = man_x
             # implement subtraction
             borrow = False
             result_man = ""
             for i in range(len(man_y) - 1, -1, -1):
-                bit_a = bool(int(man_x[i]))
-                bit_b = bool(int(man_y[i]))
+                bit_a = bool(int(man_a[i]))
+                bit_b = bool(int(man_b[i]))
 
                 result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
                 borrow = ( (not(bit_b ^ borrow)) and bit_a ) or ( (not bit_b) and borrow )
-                # print(bit_a, man_x[i]," - ", bit_b, man_y[i], " gives us ", result_man, "and borrow is : ", borrow)
+                print(bit_a, man_x[i]," - ", bit_b, man_y[i], " gives us ", result_man, "and borrow is : ", borrow)
         else:
             print("Lets do addition")
             # let's try adding these now
@@ -98,7 +124,7 @@ class MyFloat:
 
                 result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
                 carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
-                # print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
+                print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
 
 
 
