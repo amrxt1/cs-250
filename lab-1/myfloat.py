@@ -82,15 +82,18 @@ class MyFloat:
 
             result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
             carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
-            print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
+            # print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
 
+        # implement subtraction
+        borrow = False
+        result_man = ""
+        for i in range(len(man_y) - 1, -1, -1):
+            bit_a = bool(int(man_x[i]))
+            bit_b = bool(int(man_y[i]))
 
-
-
-
-
-
-
+            result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
+            borrow = ( (not(bit_b ^ borrow)) and bit_a ) or ( (not bit_b) and borrow )
+            # print(bit_a, man_x[i]," - ", bit_b, man_y[i], " gives us ", result_man, "and borrow is : ", carry)
 
 
         return result
