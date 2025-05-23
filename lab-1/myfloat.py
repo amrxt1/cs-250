@@ -73,27 +73,35 @@ class MyFloat:
             exp_off = 1
         print(f"Mantissas after: \nx: {man_x} \ny: {man_y}")
 
-        # let's try adding these now
-        carry = False
-        result_man = ""
-        for i in range(len(man_y) - 1, -1, -1):
-            bit_x = bool(int(man_x[i]))
-            bit_y = bool(int(man_y[i]))
 
-            result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
-            carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
-            # print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
+        # compare the binstrings' signs to decide whether to add them or subtract
+        if int(sign_x) ^ int(sign_y):
+            print("Lets do subtraction")
+            # implement subtraction
+            borrow = False
+            result_man = ""
+            for i in range(len(man_y) - 1, -1, -1):
+                bit_a = bool(int(man_x[i]))
+                bit_b = bool(int(man_y[i]))
 
-        # implement subtraction
-        borrow = False
-        result_man = ""
-        for i in range(len(man_y) - 1, -1, -1):
-            bit_a = bool(int(man_x[i]))
-            bit_b = bool(int(man_y[i]))
+                result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
+                borrow = ( (not(bit_b ^ borrow)) and bit_a ) or ( (not bit_b) and borrow )
+                # print(bit_a, man_x[i]," - ", bit_b, man_y[i], " gives us ", result_man, "and borrow is : ", borrow)
+        else:
+            print("Lets do addition")
+            # let's try adding these now
+            carry = False
+            result_man = ""
+            for i in range(len(man_y) - 1, -1, -1):
+                bit_x = bool(int(man_x[i]))
+                bit_y = bool(int(man_y[i]))
 
-            result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
-            borrow = ( (not(bit_b ^ borrow)) and bit_a ) or ( (not bit_b) and borrow )
-            # print(bit_a, man_x[i]," - ", bit_b, man_y[i], " gives us ", result_man, "and borrow is : ", carry)
+                result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
+                carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
+                # print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
+
+
+
 
 
         return result
