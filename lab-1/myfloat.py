@@ -55,7 +55,6 @@ class MyFloat:
         #assuming lenX equal lenY, we convert both exponents to Dec
         exp_x, exp_y = 0, 0
         for i in range(0, len(e_x_str)):
-            print(i)
             exp_x = (exp_x + int(e_x_str[i])*(2**i))
             exp_y = (exp_y+ int(e_y_str[i])*(2**i))
             print(exp_x, exp_y)
@@ -67,15 +66,24 @@ class MyFloat:
 
         # prepend the smaller exponent mantissa with suitable number of 0s
         if exp_x<exp_y:
-            man_x = "0"*(exp_off) + man_x
+            man_x = ("0"*(exp_off) + man_x)[:self.m+1] # normalizes the Mantissas
         elif exp_y<exp_x:
-            man_y = "0"*(exp_off) + man_y
+            man_y = ("0"*(exp_off) + man_y)[:self.m+1]
         else:
             exp_off = 1
         print(f"Mantissas after: \nx: {man_x} \ny: {man_y}")
 
         # let's try adding these now
-        carry, sum = False, False
+        carry = False
+        result_man = ""
+        for i in range(len(man_y) - 1, -1, -1):
+            bit_x = bool(int(man_x[i]))
+            bit_y = bool(int(man_y[i]))
+
+            result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
+            carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
+            print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
+
 
 
 
