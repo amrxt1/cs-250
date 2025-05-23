@@ -84,7 +84,7 @@ class MyFloat:
 
             bigger_number_is_x = -1
 
-            for i in range( len(man_y)-1, -1, -1):
+            for i in range(0, len(man_y)):
                 if man_y[i]==man_x[i]:
                     continue
                 if man_y[i]>man_x[i]:
