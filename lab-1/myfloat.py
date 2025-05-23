@@ -30,14 +30,15 @@ class MyFloat:
         result = 0
         # complete the method from here:
         e_str = binstring[1:self.e+1]
-        m_str = binstring[self.e+1:-1]
+        m_str = binstring[self.e+1:]
         exp=0
         man=0
+        bias = (2 ** (self.e - 1)) - 1
         for idx, x in enumerate(reversed(list(e_str))):
             exp = exp +int(x)*(2**idx)
         for idx, x in enumerate(list(m_str)):
             man = man + int(x)*(1/(2**(idx+1)))
-        result = (1+man)*(2**(exp-15))*((-1)**int(binstring[0]))
+        result = (1+man) * (2**(exp-bias)) * ((-1)**int(binstring[0])) #
         return result
 
 
@@ -70,8 +71,8 @@ class MyFloat:
             man_x = ("0"*(exp_off) + man_x)[:self.m+1] # normalizes the Mantissas
             result_exp = e_y_str
         elif exp_y <= exp_x:
-            result_exp = e_x_str
             man_y = ("0"*(exp_off) + man_y)[:self.m+1]
+            result_exp = e_x_str
 
         # compare the binstrings' signs to decide whether to add them or subtract
         if int(sign_x) ^ int(sign_y):
@@ -96,7 +97,7 @@ class MyFloat:
                 bit_b = bool(int(man_b[i]))
 
                 result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
-                borrow = ( (not bit_b ^ borrow) and bit_a ) or ( (not bit_b) and borrow )
+                borrow = ( not bit_a and bit_b ) + ( not(bit_b ^ bit_a) and borrow)
         else:
             result_sign = sign_x
             # let's try adding these now
@@ -107,9 +108,9 @@ class MyFloat:
                 bit_y = bool(int(man_y[i]))
 
                 result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
-                carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
+                carry = (bit_x and bit_y) or ((bit_x ^ bit_y) and carry )
 
-        result = str(result_sign) + result_exp + result_man[1:]
+        result = result_sign + result_exp + result_man[1:]
 
         return result
 
