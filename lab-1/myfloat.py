@@ -34,9 +34,9 @@ class MyFloat:
         exp=0
         man=0
         for idx, x in enumerate(reversed(list(e_str))):
-          exp = exp +int(x)*(2**idx)
+            exp = exp +int(x)*(2**idx)
         for idx, x in enumerate(list(m_str)):
-          man = man + int(x)*(1/(2**(idx+1)))
+            man = man + int(x)*(1/(2**(idx+1)))
         result = (1+man)*(2**(exp-15))*((-1)**int(binstring[0]))
         return result
 
@@ -47,27 +47,43 @@ class MyFloat:
         """
         result = ""
         # complete the method from here:
-        """
-        we have two strings, assuming of same length
 
-        get the exponents first. 
-        """
-        e_x_str = x[1:self.e+1]
-        e_y_str = y[1:self.e+1]
-        # x_str = x[self.e+1:]
-        # y_str = y[self.e+1:]
-        ex=0
-        for i, x in enumerate(e_x_str[::-1]):
-            ex = ex + int(x)*2**(i)
-            print(ex)
+        # deconstruct string to sign, mantissa, exponent
+        sign_x, man_x, e_x_str = x[0], "1"+x[self.e+1:], x[1:self.e+1][::-1]
+        sign_y, man_y, e_y_str = y[0], "1"+y[self.e+1:], y[1:self.e+1][::-1]
 
-        ey=0
-        for i, x in enumerate(e_y_str[::-1]):
-            ey = ey + int(x)*2**(i)
-            print(ey)
+        #assuming lenX equal lenY, we convert both exponents to Dec
+        exp_x, exp_y = 0, 0
+        for i in range(0, len(e_x_str)):
+            print(i)
+            exp_x = (exp_x + int(e_x_str[i])*(2**i))
+            exp_y = (exp_y+ int(e_y_str[i])*(2**i))
+            print(exp_x, exp_y)
 
-        exp_off = abs(ex-ey)
+        # calculating the difference in exponents
+        exp_off = abs(exp_y - exp_x)
         print("Offset bw exponents:\t",exp_off)
+
+
+        # prepend the smaller exponent mantissa with suitable number of 0s
+        if exp_x<exp_y:
+            man_x = "0"*(exp_off) + man_x
+        elif exp_y<exp_x:
+            man_y = "0"*(exp_off) + man_y
+        else:
+            exp_off = 1
+        print(f"Mantissas after: \nx: {man_x} \ny: {man_y}")
+
+        # let's try adding these now
+        carry, sum = False, False
+
+
+
+
+
+
+
+
 
         return result
 
