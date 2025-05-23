@@ -49,8 +49,8 @@ class MyFloat:
         # complete the method from here:
 
         # deconstruct string to sign, mantissa, exponent
-        sign_x, man_x, e_x_str = x[0], "1"+x[self.e+1:], x[1:self.e+1][::-1]
-        sign_y, man_y, e_y_str = y[0], "1"+y[self.e+1:], y[1:self.e+1][::-1]
+        sign_x, e_x_str, man_x = x[0], x[1:self.e+1], "1"+x[self.e+1:]
+        sign_y, e_y_str, man_y = y[0], y[1:self.e+1], "1"+y[self.e+1:]
 
         result_man = ""
         result_exp = ""
@@ -59,59 +59,36 @@ class MyFloat:
         #assuming lenX equal lenY, we convert both exponents to Dec
         exp_x, exp_y = 0, 0
         for i in range(0, len(e_x_str)):
-            exp_x = (exp_x + int(e_x_str[i])*(2**i))
-            exp_y = (exp_y+ int(e_y_str[i])*(2**i))
-            print(exp_x, exp_y)
+            exp_x = (exp_x + int(e_x_str[::-1][i])*(2**i))
+            exp_y = (exp_y+ int(e_y_str[::-1][i])*(2**i))
 
         # calculating the difference in exponents
         exp_off = abs(exp_y - exp_x)
-        print("Offset bw exponents:\t",exp_off)
-
 
         # prepend the smaller exponent mantissa with suitable number of 0s
         if exp_x<exp_y:
             man_x = ("0"*(exp_off) + man_x)[:self.m+1] # normalizes the Mantissas
             result_exp = e_y_str
-        elif exp_y<exp_x:
+        elif exp_y <= exp_x:
             result_exp = e_x_str
             man_y = ("0"*(exp_off) + man_y)[:self.m+1]
-        else:
-            exp_off = 0
-        print(f"Mantissas after: \nx: {man_x} \ny: {man_y}")
-
 
         # compare the binstrings' signs to decide whether to add them or subtract
         if int(sign_x) ^ int(sign_y):
 
-            print("Lets do subtraction")
-
-
             # lets first check for the bigger mantissa
-            bigger_number_is_x = -1
+            bigger_number_is_x = False
             for i in range(0, len(man_y)):
-                if man_y[i]==man_x[i]:
-                    continue
-                if int(man_y[i])>int(man_x[i]):
-                    bigger_number_is_x = False
-                    break
-                if int(man_y[i])<int(man_x[i]):
-                    bigger_number_is_x = True
+                if man_y[i]!=man_x[i]:
+                    bigger_number_is_x = int(man_x[i]) >= int(man_y[i])
                     break
 
-            if bigger_number_is_x==-1:
-                result_sign = sign_x
-                man_a = man_x
-                man_b = man_y
-            elif bigger_number_is_x:
-                result_sign = sign_x
-                man_a = man_x
-                man_b = man_y
+            if bigger_number_is_x:
+                result_sign, man_a, man_b = sign_x, man_x, man_y
             else:
-                result_sign = sign_y
-                man_a = man_y
-                man_b = man_x
+                result_sign, man_a, man_b = sign_y, man_y, man_x
+
             # implement subtraction
-            print(f"we will be doing {man_a} - {man_b}")
             borrow = False
             result_man = ""
             for i in range(len(man_y) - 1, -1, -1):
@@ -119,11 +96,9 @@ class MyFloat:
                 bit_b = bool(int(man_b[i]))
 
                 result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
-                borrow = ( (not (bit_b ^ borrow)) and bit_a ) or ( (not bit_b) and borrow )
-                print(bit_a, man_a[i]," - ", bit_b, man_b[i], " gives us ", result_man, "and borrow is : ", borrow)
+                borrow = ( (not bit_b ^ borrow) and bit_a ) or ( (not bit_b) and borrow )
         else:
             result_sign = sign_x
-            print("Lets do addition")
             # let's try adding these now
             carry = False
             result_man = ""
@@ -133,14 +108,9 @@ class MyFloat:
 
                 result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
                 carry = (bit_x and bit_y) ^ ((bit_x ^ bit_y) and carry )
-                print(bit_x, man_x[i]," + ", bit_y, man_y[i], " gives us ", result_man, "and carry is : ", carry)
 
+        result = str(result_sign) + result_exp + result_man[1:]
 
-
-
-        result = str(result_sign) + result_exp + result_man
-
-        print("We gottt: ",result)
         return result
 
 
