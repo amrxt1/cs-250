@@ -29,10 +29,8 @@ class MyFloat:
 
         result = 0
         # complete the method from here:
-        e_str = binstring[1:self.e+1]
-        m_str = binstring[self.e+1:]
-        exp=0
-        man=0
+        e_str, m_str = binstring[1:self.e+1], binstring[self.e+1:]
+        exp, man = 0, 0
         bias = (2 ** (self.e - 1)) - 1
         for idx, x in enumerate(reversed(list(e_str))):
             exp = exp +int(x)*(2**idx)
@@ -78,6 +76,7 @@ class MyFloat:
         if int(sign_x) ^ int(sign_y):
 
             # lets first check for the bigger mantissa
+            print("\nTime for subtraction")
             bigger_number_is_x = False
             for i in range(0, len(man_y)):
                 if man_y[i]!=man_x[i]:
@@ -97,8 +96,9 @@ class MyFloat:
                 bit_b = bool(int(man_b[i]))
 
                 result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
-                borrow = ( not bit_a and bit_b ) + ( not(bit_b ^ bit_a) and borrow)
+                borrow = ( not bit_a and bit_b ) or ( not(bit_b ^ bit_a) and borrow)
         else:
+            print("\nLets do addition")
             result_sign = sign_x
             # let's try adding these now
             carry = False
@@ -114,7 +114,6 @@ class MyFloat:
 
         return result
 
-
 if __name__ == "__main__":
-    print("local test mode")
-    # write your own test code here
+    # write tests here
+    print("Testing stuff")
