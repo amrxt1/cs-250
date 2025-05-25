@@ -14,7 +14,7 @@ class MyFloat:
 
     def toDec(self, binstring):
         """
-        This method converts binstring
+       This method converts binstring
         It converts binstring to a normal python float, then returns it
         """
         if not isinstance(binstring, str):
@@ -67,10 +67,10 @@ class MyFloat:
         # prepend the smaller exponent mantissa with suitable number of 0s
         if exp_x<exp_y:
             man_x = ("0"*(exp_off) + man_x)[:self.m+1] # normalizes the Mantissas
-            result_exp = e_y_str
+            result_exp = exp_y
         elif exp_y <= exp_x:
             man_y = ("0"*(exp_off) + man_y)[:self.m+1]
-            result_exp = e_x_str
+            result_exp = exp_x
 
         # compare the binstrings' signs to decide whether to add them or subtract
         if int(sign_x) ^ int(sign_y):
@@ -98,7 +98,7 @@ class MyFloat:
                 result_man = ("1" if ( bit_a ^ (bit_b ^ borrow) ) else "0") + result_man
                 borrow = ( not bit_a and bit_b ) or ( not(bit_b ^ bit_a) and borrow)
         else:
-            print("\nLets do addition")
+            print(f"\nLets do addition\n {x} + {y}")
             result_sign = sign_x
             # let's try adding these now
             carry = False
@@ -109,8 +109,15 @@ class MyFloat:
 
                 result_man = ("1" if ((bit_x ^ bit_y) ^ (carry)) else "0") + result_man
                 carry = (bit_x and bit_y) or ((bit_x ^ bit_y) and carry )
+                print(f"Adding {man_x[i]} + {man_y[i]} = {result_man}   carry: {carry}")
 
-        result = result_sign + result_exp + result_man[1:]
+            if carry:
+                result_exp = result_exp + 1
+                result_man = result_man[:-1]
+                result = result_sign + bin(result_exp)[2:] + result_man
+            else:
+                result = result_sign + bin(result_exp)[2:] + result_man[1:]
+
 
         return result
 
