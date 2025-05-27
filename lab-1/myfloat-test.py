@@ -1,4 +1,4 @@
-from myfloat import MyFloat
+from submission.myfloat import MyFloat
 
 ty = MyFloat(e=5, m=10)
 
@@ -18,5 +18,3 @@ if ty.add("1100010101000000", "0100111010000000") == "0100110100110000":
     print("Test case 3 passed")
 else:
     print("Test case 3 failed")
-
-

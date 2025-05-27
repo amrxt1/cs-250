@@ -1,0 +1,25 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_arith.all;
+
+entity AddSub16Bit is 
+
+ port(
+		X	: in	std_logic_vector(15 downto 0);
+		Y	: in	std_logic_vector(15 downto 0);
+		AS	: in	std_logic;
+		O	: out	std_logic_vector(15 downto 0);
+		C	: out	std_logic
+	);
+
+end AddSub16Bit;
+
+
+architecture arch1 of AddSub16Bit is
+ signal calc: unsigned(16 downto 0);
+begin
+  -- Your VHDL code defining the model goes here
+  calc <= ('0'&X) + ( ( '0'&Y XOR AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS&AS ) + AS );
+  O <= calc( 15 downto 0 );
+  C <= calc( 16 );
+end arch1;
