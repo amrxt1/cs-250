@@ -33,30 +33,26 @@ class MyCache:
         hits = 0
 
         for addr in adds:
-            print("Addr: ", addr)
             if addr in self.l1:
-                print("L1 hit")
                 hits += 1
                 total_time += self.l1_late
 
             elif addr in self.l2:
-                print("L1 miss")
-                print("L2 hit")
-
+                # copy to L1
+                self.l1.append(addr)
                 total_time += self.l1_late + self.l2_late
 
             elif addr in self.l3:
-                print("L1 miss")
-                print("L2 miss")
-                print("L3 hit")
-
+                # copy to L2 then to L1
+                self.l2.append(addr)
+                self.l1.append(addr)
                 total_time += self.l1_late + self.l2_late + self.l3_late
 
             else:
-                print("L1 miss")
-                print("L2 miss")
-                print("L3 miss")
-
+                # copy to L3 then L2 then L1
+                self.l3.append(addr)
+                self.l2.append(addr)
+                self.l1.append(addr)
                 total_time += self.l1_late + self.l2_late + self.l3_late + self.m_late
 
         hit_rate = hits / len(adds)
