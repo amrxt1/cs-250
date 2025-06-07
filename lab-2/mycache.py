@@ -1,3 +1,6 @@
+from collections import deque
+
+
 class MyCache:
     def __init__(
         self, l1_size, l2_size, l3_size, l1_latency, l2_latency, l3_latency, m_latency
@@ -10,9 +13,9 @@ class MyCache:
         # assume copying 1 block from L3 to L2 takes l2_latency + l3_latency time;
         # assume copying 1 block from L1 from main memory takes l1_latency +
         #        l2_latency + l3_latency + m_latency time.
-        self.l1 = [""] * l1_size
-        self.l2 = [""] * l2_size
-        self.l3 = [""] * l3_size
+        self.l1 = deque([""] * l1_size, maxlen=l1_size)
+        self.l2 = deque([""] * l2_size, maxlen=l2_size)
+        self.l3 = deque([""] * l3_size, maxlen=l3_size)
         self.l1_late = l1_latency
         self.l2_late = l2_latency
         self.l3_late = l3_latency
@@ -28,9 +31,14 @@ class MyCache:
 
         # -----write your programme from here-----
 
-        print(self.l1, self.l1_late)
-        print(self.l2, self.l2_late)
-        print(self.l3, self.l3_late)
+        for addr in adds:
+            print("looking for ", addr, " in l1")
+            print(addr in self.l1)
+            print("looking for ", addr, " in l2")
+            print(addr in self.l2)
+            print("looking for ", addr, " in l3")
+            print(addr in self.l3)
+
         # Default solution:
         # all accesss has to be from main memory
         total_time = len(adds) * (
