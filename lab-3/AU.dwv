@@ -1,0 +1,49 @@
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+
+entity AU is 
+  port(
+    OpcodeB0 : in  std_logic;
+    OpcodeB1 : in  std_logic;
+    OpcodeB2 : in  std_logic;
+    Imm0      : in  std_logic;
+    Imm1      : in  std_logic;
+    Imm2      : in  std_logic;
+    Imm3      : in  std_logic;
+    Imm4      : in  std_logic;
+    Imm5      : in  std_logic;
+    Imm6      : in  std_logic;
+    Imm7      : in  std_logic;
+    Mode0     : in  std_logic;
+    Mode1     : in  std_logic;
+    Rn_data   : in  std_logic_vector(15 downto 0);
+    Rm_data   : in  std_logic_vector(15 downto 0);
+    Rd_data   : out std_logic_vector(15 downto 0)
+  );
+end AU;
+
+architecture arch1 of AU is
+  signal OpB      : std_logic_vector(2 downto 0);
+  signal Mode     : std_logic_vector(1 downto 0);
+  signal Imm8_ext : std_logic_vector(15 downto 0);
+  signal Imm3_ext : std_logic_vector(15 downto 0);
+begin
+
+  OpB      <= OpcodeB0 & OpcodeB1 & OpcodeB2;
+  Mode     <= Mode1    & Mode0;
+  Imm8_ext <= "00000000" & (Imm7 & Imm6 & Imm5 & Imm4 & Imm3 & Imm2 & Imm1 & Imm0);
+
+  Imm3_ext <= "0000000000000" & (Imm2 & Imm1 & Imm0);
+
+
+  Rd_data <= std_logic_vector( unsigned(Rn_data) + unsigned(Rm_data) )   when OpB="011" and Mode="00" else
+             std_logic_vector( unsigned(Rn_data) - unsigned(Rm_data) )   when OpB="011" and Mode="01" else
+             std_logic_vector( unsigned(Rn_data) + unsigned(Imm3_ext) ) when OpB="011" and Mode="10" else
+             std_logic_vector( unsigned(Rn_data) - unsigned(Imm3_ext) ) when OpB="011" and Mode="11" else
+             Imm8_ext                                                 when OpB="100"                    else
+             std_logic_vector( unsigned(Rn_data) + unsigned(Imm8_ext) ) when OpB="110"                    else
+             std_logic_vector( unsigned(Rn_data) - unsigned(Imm8_ext) ) when OpB="111"                    else
+             (others => '0');
+
+end arch1;
