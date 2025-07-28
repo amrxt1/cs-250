@@ -7,24 +7,23 @@ module CMP(
 	output reg F
 	);
 	reg z, n, c;
-	//skipping flag V
+	//value fixing V to 1'b0
 	wire v;
-	wire [16:0] s;
 	assign v = 1'b0;
-
-	// synthesized as 2's complement && cin-high
-	assign s = {1'b0,Rn_data} - {1'b0, Rm_data};
+	
+	wire [16:0] s; // wire for subtraction output
+	assign s = {1'b0,Rn_data} - {1'b0, Rm_data}; // appending a 1'b0 to get the resulting overflow bit; used to check the C flag
 
 	always @(posedge clk) begin
 		if (e) begin
 			z <= ~(|s[15:0]);
 			n <= s[15];
 			// could also use Verilog's syntax for this
-			// c <= (rn_data >= rm_data) ? 1'b1 : 1'b0;
-			c <= ~s[16]; // No borrow = set carry
+			// c <= (rn_data >= rm_data) ? 1'b1 : 1'b0;  
+			c <= ~s[16];
 		end
 	end
-
+	
 	always @(*) begin
 		case(cond)
 			4'b0000: F <= (z==1'b1) ? 1'b1 : 1'b0; //EQual
